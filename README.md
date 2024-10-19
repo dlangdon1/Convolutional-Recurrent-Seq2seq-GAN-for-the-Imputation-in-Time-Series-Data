@@ -79,4 +79,4 @@ tensorflow==2.16.1
 <br/>
 
 ## Hardware
-I trained this model on a fairly powerful machine: a System76 Adder WS laptop with 64 GB of RAM and NVidia RTX 2070 GPU.
+I trained this model on a fairly powerful machine: a lenovo legion 5 pro laptop with 32 GB of RAM and NVidia RTX 3070 GPU.
