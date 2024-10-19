@@ -54,7 +54,7 @@ I will first explain the architecture of the plain, Vanilla **seq2seq model**, s
 
 It is a Seq2seq Neural Network, with an Encoder part that is both recurrent and convolutional, and a fully recurrent Decoder.
 
-<a href="url" align="center"><img src="https://github.com/IvanBongiorni/GAN-RNN_Timeseries-imputation/blob/master/utils/seq2seq_architecture.png" align="center" height="640" width="480" ></a>
+<a href="url" align="center"><img src="https://github.com/dlangdon1/Convolutional-Recurrent-Seq2seq-GAN-for-the-Imputation-in-Time-Series-Data/utils/seq2seq_architecture.png" align="center" height="640" width="480" ></a>
 
 The goal of the Encoder is to process the input signal. I assumed the LSTM layer (provided with a much higher number of parameters) would have done most of the job, with 1D Conv layer working as a support architecture.
 I thought them as something similar to *skip connections*, that allow simpler signals to flow through the nodes of the Network more directly.
@@ -70,7 +70,7 @@ In case of **GAN** models, I simply replicated all the Generators' architecture 
 
 ## 4. Training
 
-After running data pre-processing pipeline through `main_processing.py`, every Training, Validation and Test observation is stored on hard disk as a separate file. During training, to be launched from `main_train.py`, the script from `train.py` takes a trend and processes it, turning into a 3D matrix as explained above, and applying an artificial deterioration to the input batch. The way deterioration is generated is explained in [nan_exploration.ipynb notebook](https://github.com/IvanBongiorni/GAN-RNN_Timeseries-imputation/blob/master/nan_exploration.ipynb).
+After running data pre-processing pipeline through `main_processing.py`, every Training, Validation and Test observation is stored on hard disk as a separate file. During training, to be launched from `main_train.py`, the script from `train.py` takes a trend and processes it, turning into a 3D matrix as explained above, and applying an artificial deterioration to the input batch. The way deterioration is generated is explained in [nan_exploration.ipynb notebook](https://github.com/dlangdon1/Convolutional-Recurrent-Seq2seq-GAN-for-the-Imputation-in-Time-Series-Data/nan_exploration.ipynb).
 
 This artificial deterioration is applied randomly from `deterioration.py`, and consists of inserting missing values into the input batch. Their generation is explained in more detail in  After a given share of datapoints in the trend have been turned `NaN`'s, a **placeholder value** is added in their place. The choice of the placeholder value in relation with the choice of activation function is extremely important: the placeholder must tell the network where the data to be impute are, and therefore must be locate outside the meaningful range of my dataset. Since web traffic cannot possibly be lower than zero, I had to chose a placeholder values that was outiside the `[0, infinite]` range, and pair it with an activation function that is able to react to that peculiar value. Clearly, classical ReLU is not feasible, since any negative number passing through it will be flattened to zero. I then chose **ELU** activation, together with a placeholder of `-0.1`. In that way, a neural network is able to recognize what are the values to be substituted (imputed) during training.
 
@@ -100,9 +100,9 @@ Since the magnitude of the BCE loss exceeds its regressive counterpart, a weight
 
 ### 5. Results
 
-The three models have been compared, based on their performance on Test data. A more detailed exploration of their performances is avilable in [performance_comparison]((https://github.com/IvanBongiorni/GAN-RNN_Timeseries-imputation/blob/master/performance_comparison.ipynb)) Jupyter Notebook. The following kernel density plot represents a good summary of their comparison:
+The three models have been compared, based on their performance on Test data. A more detailed exploration of their performances is avilable in [performance_comparison]((https://github.com/dlangdon1/Convolutional-Recurrent-Seq2seq-GAN-for-the-Imputation-in-Time-Series-Dataperformance_comparison.ipynb)) Jupyter Notebook. The following kernel density plot represents a good summary of their comparison:
 
-<a href="url" align="center"><img src="https://github.com/IvanBongiorni/GAN-RNN_Timeseries-imputation/blob/master/utils/performance_comparison_3models.png" align="center" height="300" width="800" ></a>
+<a href="url" align="center"><img src="https://github.com/dlangdon1/Convolutional-Recurrent-Seq2seq-GAN-for-the-Imputation-in-Time-Series-Data/utils/performance_comparison_3models.png" align="center" height="300" width="800" ></a>
 
 The vanilla Seq2seq models already achieves very good results, while a plain GAN, based exclusively on a Generator Vs Discriminator game is not able to reach acceptable performances. What is most interesting is the boost in performance that the Discriminator feedback adds to the partially adversarial model, compared to its vanilla counterpart. Partial GAN is proved to be superior.
 
